@@ -10,17 +10,17 @@ import warnings
 warnings.filterwarnings('ignore')
 
 #definitions
-GRID_SIZE = 0.01 * 3.2 #1km2
+GRID_SIZE = 0.01 * 9.6 #1km2
 COASTAL_BUFFER = 0.01 #1km
 
 gdf_admin = gpd.read_file("pacific_admin_polygon.geojson")
-countries = list(gdf_admin.country)
+countries = list(gdf_admin.NAME)
 print(countries)
 
-for COUNTRY in countries:
-    print("GRIDDING: " + COUNTRY)
-    gdf = gdf_admin[gdf_admin.country == COUNTRY]
-    gid = gdf.iloc[0]['gid']
+for country in countries:
+    print("GRIDDING: " + country)
+    gdf = gdf_admin[gdf_admin.NAME == country]
+    gid = gdf.iloc[0]['ISO2']
     #gid
 
     buffer_df = gdf.geometry.buffer(COASTAL_BUFFER, cap_style = 3)
@@ -47,7 +47,7 @@ for COUNTRY in countries:
 
     grid_df = gpd.GeoDataFrame(grid_cells, columns=['geometry'], crs=from_epsg(8859))
 
-    grid_df["country"] = COUNTRY
+    grid_df["country"] = country
     grid_df["code"] = gid
     grid_df["gid"] = grid_df.index + 1
 
