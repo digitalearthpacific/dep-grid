@@ -20,7 +20,6 @@ for country in countries:
     gdf = gpd.read_file(file)
     gdf_list.append(gdf)
 
-
 #merge
 gdf = gpd.GeoDataFrame(pd.concat(gdf_list, ignore_index=True))
 gdf.to_file("grid_pacific.geojson", driver='GeoJSON')
