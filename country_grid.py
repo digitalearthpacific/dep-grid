@@ -48,7 +48,7 @@ for country in countries:
 
     grid_df = gpd.GeoDataFrame(
         grid_cells, columns=["geometry"], crs=gdf_admin.crs
-    ).to_crs(8859)
+    ).to_crs(3832)
 
     grid_df["country"] = country
     grid_df["code"] = gid
