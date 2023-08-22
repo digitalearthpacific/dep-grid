@@ -7,11 +7,12 @@ import numpy as np
 from fiona.crs import from_epsg
 import shapely
 import warnings
-warnings.filterwarnings('ignore')
 
-#definitions
-GRID_SIZE = 0.01 * 9.6 #1km2
-COASTAL_BUFFER = 0.01 * 1 #1km
+warnings.filterwarnings("ignore")
+
+# definitions
+GRID_SIZE = 0.01 * 9.6  # 1km2
+COASTAL_BUFFER = 0.01 * 1  # 1km
 
 gdf_admin = gpd.read_file("pacific_admin_polygon.geojson")
 countries = list(gdf_admin.NAME)
@@ -20,10 +21,10 @@ print(countries)
 for country in countries:
     print("GRIDDING: " + country)
     gdf = gdf_admin[gdf_admin.NAME == country]
-    gid = gdf.iloc[0]['ISO2']
-    #gid
+    gid = gdf.iloc[0]["ISO2"]
+    # gid
 
-    buffer_df = gdf.geometry.buffer(COASTAL_BUFFER, cap_style = 3)
+    buffer_df = gdf.geometry.buffer(COASTAL_BUFFER, cap_style=3)
     gdf = buffer_df
 
     xmin, ymin, xmax, ymax = gdf.total_bounds
@@ -45,14 +46,15 @@ for country in countries:
             else:
                 pass
 
-    grid_df = gpd.GeoDataFrame(grid_cells, columns=['geometry'], crs=from_epsg(8859))
+    grid_df = gpd.GeoDataFrame(
+        grid_cells, columns=["geometry"], crs=gdf_admin.crs
+    ).to_crs(8859)
 
     grid_df["country"] = country
     grid_df["code"] = gid
     grid_df["gid"] = grid_df.index + 1
 
-    #export
-    grid_df.to_file("grid_" + gid.lower() + ".geojson", driver='GeoJSON')
+    # export
+    grid_df.to_file("grid_" + gid.lower() + ".geojson", driver="GeoJSON")
 
 print("Finished.")
-
