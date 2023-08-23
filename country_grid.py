@@ -11,7 +11,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 # definitions
-GRID_SIZE = 0.01 * 9.6  # 1km2
+GRID_SIZE = 0.01 * 96  # 1km2
 COASTAL_BUFFER = 0.01 * 1  # 1km
 
 gdf_admin = gpd.read_file("pacific_admin_polygon.geojson")
