@@ -53,6 +53,7 @@ for country in countries:
     grid_df["country"] = country
     grid_df["code"] = gid
     grid_df["gid"] = grid_df.index + 1
+    grid_df["gid"] = grid_df["gid"].astype(str).str.zfill(3)
 
     # export
     grid_df.to_file("grid_" + gid.lower() + ".geojson", driver="GeoJSON")
