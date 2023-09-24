@@ -1,5 +1,2 @@
 geopandas
-pandas
-numpy
-fiona
-shapely
+odc.geo
