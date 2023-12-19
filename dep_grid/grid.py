@@ -13,7 +13,7 @@ PACIFIC_EPSG = 3832
 def grid(
     resolution: int | float = 30,
     crs=PACIFIC_EPSG,
-    return_type: Literal["gridspec", "geoseries"] = "gridspec",
+    return_type: Literal["GridSpec", "GeoSeries"] = "GridSpec",
     intersect_with: gpd.GeoDataFrame | None = None,
 ) -> GridSpec | gpd.GeoSeries:
     """Returns a GridSpec or GeoSeries representing the Pacific grid, optionally
@@ -24,7 +24,7 @@ def grid(
         full_grid = _geoseries(resolution, crs)
         return _intersect_grid(full_grid, intersect_with)
 
-    return {"gridspec": _gridspec, "geoseries": _geoseries}[return_type](
+    return {"GridSpec": _gridspec, "GeoSeries": _geoseries}[return_type](
         resolution, crs
     )
 
