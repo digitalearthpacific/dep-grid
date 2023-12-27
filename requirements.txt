@@ -1,6 +1,0 @@
-branca
-folium
-geopandas
-mapclassify
-matplotlib
-odc.geo
