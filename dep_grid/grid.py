@@ -31,18 +31,18 @@ def grid(
 
 def _intersect_grid(grid: GeoSeries | GeoDataFrame, areas_of_interest):
     return gpd.sjoin(
-        gpd.GeoDataFrame(geometry=grid), areas_of_interest.to_crs(grid)
+        gpd.GeoDataFrame(geometry=grid), areas_of_interest.to_crs(grid.crs)
     ).drop(columns=["index_right"])
 
 
-def _gridspec(resolution):
+def _gridspec(resolution, crs=PACIFIC_EPSG):
     gridspec_origin = XY(-3000000.0, -4000000.0)
 
     side_in_meters = 100_000
     shape = (side_in_meters / resolution, side_in_meters / resolution)
 
     return GridSpec(
-        crs=PACIFIC_EPSG,
+        crs=crs,
         tile_shape=shape,
         resolution=resolution,
         origin=gridspec_origin,
@@ -51,7 +51,7 @@ def _gridspec(resolution):
 
 def _geoseries(resolution, crs) -> GeoSeries:
     bounds = BoundingBox(120, -30, 280, 30, crs="EPSG:4326").to_crs(crs)
-    tiles = _gridspec(resolution).tiles(bounds)
+    tiles = _gridspec(resolution, crs).tiles(bounds)
     geometry, index = zip(
         *[(a_tile[1].boundingbox.polygon.geom, a_tile[0]) for a_tile in tiles]
     )
