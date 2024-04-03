@@ -38,7 +38,7 @@ def _intersect_grid(grid: GeoSeries | GeoDataFrame, areas_of_interest):
 def _gridspec(resolution, crs=PACIFIC_EPSG):
     gridspec_origin = XY(-3000000.0, -4000000.0)
 
-    side_in_meters = 100_000
+    side_in_meters = 96_000
     shape = (side_in_meters / resolution, side_in_meters / resolution)
 
     return GridSpec(
