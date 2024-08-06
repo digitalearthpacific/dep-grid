@@ -42,7 +42,7 @@ if not gadm_file.exists() or not gadm_union_file.exists():
     )
 
     all_polys.to_file(gadm_file)
-    all_polys.dissolve().to_file(gadm_union_file)
+    all_polys.dissolve()[["geometry"]].to_file(gadm_union_file)
 
 gadm = gpd.read_file(gadm_file)
 gadm_union = gpd.read_file(gadm_union_file)

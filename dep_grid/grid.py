@@ -14,10 +14,21 @@ def grid(
     resolution: int | float = 30,
     crs=PACIFIC_EPSG,
     return_type: Literal["GridSpec", "GeoSeries"] = "GridSpec",
-    intersect_with: gpd.GeoDataFrame | None = None,
-) -> GridSpec | gpd.GeoSeries:
+    intersect_with: GeoDataFrame | None = None,
+) -> GridSpec | GeoSeries:
     """Returns a GridSpec or GeoSeries representing the Pacific grid, optionally
-    interesected with an area of interest.
+    intersected with an area of interest.
+
+    Args:
+        resolution: The resolution, in meters, of the output. As tiles are
+            defined to be 96,000 meters on each side, it should divide 96,000
+            evenly.
+        crs: The desired crs of the output.
+        return_type: The return type. If intersect_with (see below) is not None,
+            this is ignored.
+        intersect_with: The output is intersected with the supplied GeoDataFrame
+            before returning, returning only tiles which overlap with those
+            features. Forces the output to be a GeoSeries.
     """
 
     if intersect_with is not None:
@@ -29,7 +40,7 @@ def grid(
     )
 
 
-def _intersect_grid(grid: GeoSeries | GeoDataFrame, areas_of_interest):
+def _intersect_grid(grid: GeoSeries, areas_of_interest):
     return gpd.sjoin(
         gpd.GeoDataFrame(geometry=grid), areas_of_interest.to_crs(grid.crs)
     ).drop(columns=["index_right"])
