@@ -4,8 +4,9 @@ import geopandas as gpd
 import pandas as pd
 
 gadm_file = Path(__file__).parent / "gadm_pacific.gpkg"
+gadm_union_file = Path(__file__).parent / "gadm_pacific_union.gpkg"
 
-if not gadm_file.exists():
+if not gadm_file.exists() or not gadm_union_file.exists():
     countries_and_codes = {
         "American Samoa": "ASM",
         "Cook Islands": "COK",
@@ -41,8 +42,7 @@ if not gadm_file.exists():
     )
 
     all_polys.to_file(gadm_file)
-    all_polys.dissolve("COUNTRY").to_file(
-        Path(__file__).parent / "gadm_pacific_union.gpkg"
-    )
+    all_polys.dissolve().to_file(gadm_union_file)
 
 gadm = gpd.read_file(gadm_file)
+gadm_union = gpd.read_file(gadm_union_file)
