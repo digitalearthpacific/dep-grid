@@ -13,9 +13,9 @@ PACIFIC_EPSG = 3832
 def grid(
     resolution: int | float = 30,
     crs=PACIFIC_EPSG,
-    return_type: Literal["GridSpec", "GeoSeries"] = "GridSpec",
+    return_type: Literal["GridSpec", "GeoSeries", "GeoDataFrame"] = "GridSpec",
     intersect_with: GeoDataFrame | None = None,
-) -> GridSpec | GeoSeries:
+) -> GridSpec | GeoSeries | GeoDataFrame:
     """Returns a GridSpec or GeoSeries representing the Pacific grid, optionally
     intersected with an area of interest.
 
@@ -28,16 +28,18 @@ def grid(
             this is ignored.
         intersect_with: The output is intersected with the supplied GeoDataFrame
             before returning, returning only tiles which overlap with those
-            features. Forces the output to be a GeoSeries.
+            features. Forces the output to be a GeoDataFrame.
     """
 
     if intersect_with is not None:
         full_grid = _geoseries(resolution, crs)
         return _intersect_grid(full_grid, intersect_with)
 
-    return {"GridSpec": _gridspec, "GeoSeries": _geoseries}[return_type](
-        resolution, crs
-    )
+    return {
+        "GridSpec": _gridspec,
+        "GeoSeries": _geoseries,
+        "GeoDataFrame": _geodataframe,
+    }[return_type](resolution, crs)
 
 
 def _intersect_grid(grid: GeoSeries, areas_of_interest):
@@ -58,6 +60,10 @@ def _gridspec(resolution, crs=PACIFIC_EPSG):
         resolution=resolution,
         origin=gridspec_origin,
     )
+
+
+def _geodataframe(resolution, crs=PACIFIC_EPSG):
+    return GeoDataFrame(geometry=_geoseries(resolution, crs), crs=crs)
 
 
 def _geoseries(resolution, crs) -> GeoSeries:
